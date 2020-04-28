@@ -1,0 +1,211 @@
+create table bed_type (
+       id integer not null auto_increment,
+        kind_of_bed varchar(255),
+        no_of_persons integer,
+        primary key (id)
+    ) engine=InnoDB
+Hibernate:
+
+    create table description (
+       id bigint not null auto_increment,
+        language integer,
+        text varchar(255),
+        primary key (id)
+    ) engine=InnoDB
+Hibernate:
+
+    create table facility (
+       id bigint not null auto_increment,
+        svg varchar(255),
+        facility_type integer,
+        primary key (id)
+    ) engine=InnoDB
+Hibernate:
+
+    create table facility_description (
+       id_facility bigint not null,
+        id_description bigint not null
+    ) engine=InnoDB
+Hibernate:
+
+    create table hotel_description (
+       id bigint not null auto_increment,
+        hotel_description_type varchar(255),
+        id_description bigint,
+        primary key (id)
+    ) engine=InnoDB
+Hibernate:
+
+    create table hotels (
+       id bigint not null auto_increment,
+        city varchar(255),
+        name varchar(255),
+        id_hotel_description bigint,
+        id_region bigint,
+        primary key (id)
+    ) engine=InnoDB
+Hibernate:
+
+    create table offer_description (
+       id bigint not null auto_increment,
+        id_offer_description_type varchar(255),
+        id_description bigint,
+        primary key (id)
+    ) engine=InnoDB
+Hibernate:
+
+    create table offers (
+       id bigint not null auto_increment,
+        end_date datetime(6),
+        price float,
+        start_date datetime(6),
+        id_offer_description bigint,
+        id_room bigint,
+        primary key (id)
+    ) engine=InnoDB
+Hibernate:
+
+    create table price (
+       id bigint not null auto_increment,
+        amount float,
+        end_date datetime(6),
+        start_date datetime(6),
+        id_room bigint,
+        primary key (id)
+    ) engine=InnoDB
+Hibernate:
+
+    create table regions (
+       id bigint not null auto_increment,
+        country_name varchar(255),
+        name varchar(255),
+        id_description bigint,
+        primary key (id)
+    ) engine=InnoDB
+Hibernate:
+
+    create table room_bed_list (
+       id bigint not null auto_increment,
+        no_of_beds integer,
+        id_bed_type integer,
+        id_room bigint,
+        primary key (id)
+    ) engine=InnoDB
+Hibernate:
+
+    create table room_description (
+       id bigint not null auto_increment,
+        room_description_type varchar(255),
+        id_description bigint,
+        primary key (id)
+    ) engine=InnoDB
+Hibernate:
+
+    create table room_facility (
+       id_room bigint not null,
+        id_facility bigint not null
+    ) engine=InnoDB
+Hibernate:
+
+    create table rooms (
+       id bigint not null auto_increment,
+        available bit,
+        id_room_description bigint,
+        primary key (id)
+    ) engine=InnoDB
+Hibernate:
+
+    alter table facility_description
+       add constraint FK1cc8f9gv51xd5mvlclxfotea1
+       foreign key (id_description)
+       references description (id)
+Hibernate:
+
+    alter table facility_description
+       add constraint FKkvj2nb5p3j2kq8ulgsqkq1a6p
+       foreign key (id_facility)
+       references facility (id)
+Hibernate:
+
+    alter table hotel_description
+       add constraint FK1fekq9lb82ntyj0qcgfadjgr5
+       foreign key (id_description)
+       references description (id)
+Hibernate:
+
+    alter table hotels
+       add constraint FKltv7pbtggemenw62np0pqx41b
+       foreign key (id_hotel_description)
+       references hotel_description (id)
+Hibernate:
+
+    alter table hotels
+       add constraint FKltldp8fao5no4ix73kt7uxf5t
+       foreign key (id_region)
+       references regions (id)
+Hibernate:
+
+    alter table offer_description
+       add constraint FKjual550ylmk7pghorr60vu5ir
+       foreign key (id_description)
+       references description (id)
+Hibernate:
+
+    alter table offers
+       add constraint FK2wss0bopfwe5yrhmsx3eubf7c
+       foreign key (id_offer_description)
+       references offer_description (id)
+Hibernate:
+
+    alter table offers
+       add constraint FKgc8c9ky104l92has8lg5wjmup
+       foreign key (id_room)
+       references rooms (id)
+Hibernate:
+
+    alter table price
+       add constraint FKjebtqxswptahoeun6kacjdfe6
+       foreign key (id_room)
+       references rooms (id)
+Hibernate:
+
+    alter table regions
+       add constraint FKborlwufurniqy2eoceg0lm3ms
+       foreign key (id_description)
+       references description (id)
+Hibernate:
+
+    alter table room_bed_list
+       add constraint FKgdn38ftu4fsl2e9bfsjwglhpt
+       foreign key (id_bed_type)
+       references bed_type (id)
+Hibernate:
+
+    alter table room_bed_list
+       add constraint FKbjhuunc7d7dywjyst3fwkiqc7
+       foreign key (id_room)
+       references rooms (id)
+Hibernate:
+
+    alter table room_description
+       add constraint FKmo4f33prct8217dcm1bbfmtus
+       foreign key (id_description)
+       references description (id)
+Hibernate:
+
+    alter table room_facility
+       add constraint FKreeta2oukq67clma9nike2c4t
+       foreign key (id_facility)
+       references facility (id)
+Hibernate:
+
+    alter table room_facility
+       add constraint FKjy62e155mw7oy28kj43hqcc6m
+       foreign key (id_room)
+       references rooms (id)
+Hibernate:
+
+    alter table rooms
+       add constraint FK3v5inqblmvtttfvvpfklc5inv
+       foreign key (id_room_description)
+       references room_description (id)
