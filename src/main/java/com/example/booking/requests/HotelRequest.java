@@ -5,16 +5,15 @@ public class HotelRequest {
     private Long id;
     private String name;
     private String city;
-    private Long idRegion;
+    private Long idUser;
 
     public HotelRequest() {
     }
 
-    public HotelRequest(Long id, String name, String city, Long idRegion) {
+    public HotelRequest(Long id, String name, String city) {
         this.id = id;
         this.name = name;
         this.city = city;
-        this.idRegion = idRegion;
     }
 
     public String getName() {
@@ -33,19 +32,19 @@ public class HotelRequest {
         this.city = city;
     }
 
-    public Long getIdRegion() {
-        return idRegion;
-    }
-
-    public void setIdRegion(Long idRegion) {
-        this.idRegion = idRegion;
-    }
-
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(Long idUser) {
+        this.idUser = idUser;
     }
 }

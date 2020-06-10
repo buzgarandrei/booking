@@ -2,6 +2,7 @@ package com.example.booking.repositories;
 
 import com.example.booking.entities.Facility;
 import com.example.booking.entities.Hotel;
+import com.example.booking.entities.Price;
 import com.example.booking.entities.Room;
 import com.example.booking.requests.RequestWith2Ids;
 import com.example.booking.requests.RoomRequest;
@@ -161,4 +162,13 @@ public class RoomRepositoryImpl implements RoomRepository {
         List<Facility> resultList = query.getResultList();
         return resultList;
     }
+
+    @Override
+    @Transactional
+    public List<Price> getPricesOfRoom(RequestWithId request) {
+        List<Price> priceList = entityManager.createQuery("select distinct price from Price price where price.room.id = :id order by price.id",Price.class)
+                .setParameter("id",request.getId()).getResultList();
+        return priceList;
+    }
+
 }

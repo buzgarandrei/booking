@@ -54,6 +54,40 @@ class RoomTest {
         room1.getFacilityList().add(entityManager.find(Facility.class,3L));
         entityManager.persist(room1);
 
+        Room room2 = new Room();
+        room2.setNrOfKids(2);
+        room2.setNrOfAdults(2);
+        room2.setAvailable(true);
+        room2.setHotel(entityManager.find(Hotel.class,2L));
+        room2.getFacilityList().add(entityManager.find(Facility.class,1L));
+        room2.getFacilityList().add(entityManager.find(Facility.class,3L));
+        room2.getFacilityList().add(entityManager.find(Facility.class,5L));
+        entityManager.persist(room2);
+
+        Room room3 = new Room();
+        room3.setNrOfKids(2);
+        room3.setNrOfAdults(3);
+        room3.setAvailable(true);
+        room3.setHotel(entityManager.find(Hotel.class,1L));
+        room3.getFacilityList().add(entityManager.find(Facility.class,3L));
+        room3.getFacilityList().add(entityManager.find(Facility.class,7L));
+        room3.getFacilityList().add(entityManager.find(Facility.class,9L));
+        entityManager.persist(room3);
+
+        Room room4 = new Room();
+        room4.setNrOfKids(1);
+        room4.setNrOfAdults(2);
+        room4.setAvailable(true);
+        room4.setHotel(entityManager.find(Hotel.class,3L));
+        room4.getFacilityList().add(entityManager.find(Facility.class,1L));
+        room4.getFacilityList().add(entityManager.find(Facility.class,3L));
+        room4.getFacilityList().add(entityManager.find(Facility.class,5L));
+        room4.getFacilityList().add(entityManager.find(Facility.class,7L));
+        room4.getFacilityList().add(entityManager.find(Facility.class,9L));
+        entityManager.persist(room4);
+
+
+
 
     }
 }

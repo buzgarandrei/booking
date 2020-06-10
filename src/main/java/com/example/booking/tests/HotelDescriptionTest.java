@@ -43,6 +43,13 @@ public class HotelDescriptionTest {
         hotelDescription1.setHotel(hotel1);
 
         entityManager.persist(hotelDescription1);
+
+        HotelDescription hotelDescription2 = new HotelDescription();
+        hotelDescription2.setDescription(entityManager.find(Description.class,17L));
+        hotelDescription2.setHotel(entityManager.find(Hotel.class,3L));
+        hotelDescription2.setHotelDescriptionType(HotelDescriptionType.DESCRIPTION);
+        entityManager.persist(hotelDescription2);
+
     }
 
 }

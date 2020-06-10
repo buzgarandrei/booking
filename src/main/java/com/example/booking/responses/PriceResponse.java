@@ -10,6 +10,7 @@ import java.util.Date;
 
 public class PriceResponse {
 
+    private Long id;
     private String startDate;
     private String endDate;
     private float amount;
@@ -55,5 +56,13 @@ public class PriceResponse {
 
     public void setIdRoom(Long idRoom) {
         this.idRoom = idRoom;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

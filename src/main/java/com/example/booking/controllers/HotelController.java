@@ -8,6 +8,7 @@ import com.example.booking.responses.HotelResponse;
 import com.example.booking.responses.RoomResponse;
 import com.example.booking.services.AuthenticationService;
 import com.example.booking.services.HotelService;
+import com.example.booking.utils.RoleEnum;
 import com.example.booking.utils.StateResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,7 +38,8 @@ public class HotelController {
 
     @RequestMapping(value = "/addHotel",method = RequestMethod.POST)
     public StateResponse addHotel(HttpServletRequest servletRequest, @RequestBody HotelRequest request) {
-
+        boolean validated = authenticationService.validateTokenAndRole(servletRequest, RoleEnum.OWNER);
+        if(!validated) return null;
         StateResponse stateResponse = new StateResponse();
         try {
             if(hotelService.addHotel(request).isSuccess())
@@ -115,11 +117,19 @@ public class HotelController {
         return hotelService.getHotelFacilities(request);
     }
 
-    @RequestMapping(value = "/getRoomsOfAHotel")
+    @RequestMapping(value = "/getRoomsOfAHotel", method = RequestMethod.POST)
     public List<RoomResponse> getRoomsOfAHotel(@RequestBody RequestWithId request) {
         return hotelService.getRoomsOfAHotel(request);
     }
 
+    @RequestMapping(path = "getHotelsOfOwner", method = RequestMethod.POST)
+    public List<HotelResponse> getHotelsOfOwner(HttpServletRequest request) {
+        boolean validated = authenticationService.validateTokenAndRole(request,RoleEnum.OWNER);
+        if(!validated) return null;
+        RequestWithId requestWithId = new RequestWithId();
+        requestWithId.setId(authenticationService.getIdUser(request));
+        return hotelService.getHotelsOfOwner(requestWithId);
+    }
 
 
 

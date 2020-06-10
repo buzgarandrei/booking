@@ -2,6 +2,7 @@ package com.example.booking.tests;
 
 import com.example.booking.entities.Facility;
 import com.example.booking.entities.Hotel;
+import com.example.booking.entities.User;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,16 +21,12 @@ public class HotelTest {
         Hotel hotel = new Hotel();
         hotel.setName("Hotel Continental");
         hotel.setCity("Cluj-Napoca");
+        hotel.setUser(entityManager.find(User.class,3L));
 
-        try {
-            Facility facility = entityManager.find(Facility.class,2L);
-            hotel.getHotelFacilityList().add(facility);
-        }
-        catch (Exception e) {
-            System.out.println("Problem appending");
-        }
-
-
+        hotel.getHotelFacilityList().add(entityManager.find(Facility.class,2L));
+        hotel.getHotelFacilityList().add(entityManager.find(Facility.class,4L));
+        hotel.getHotelFacilityList().add(entityManager.find(Facility.class,6L));
+        hotel.getHotelFacilityList().add(entityManager.find(Facility.class,10L));
 
         entityManager.persist(hotel);
 
@@ -38,12 +35,24 @@ public class HotelTest {
         Hotel hotel1 = new Hotel();
         hotel1.setName("Hotel Wonderland");
         hotel1.setCity("Cluj-Napoca");
-
-        //HotelDescription hotelDescription1 = entityManager.find(HotelDescription.class,2L);
-        //hotel1.setHotelDescription(hotelDescription1);
+        hotel1.setUser(entityManager.find(User.class,5L));
+        hotel1.getHotelFacilityList().add(entityManager.find(Facility.class,2L));
+        hotel1.getHotelFacilityList().add(entityManager.find(Facility.class,6L));
+        hotel1.getHotelFacilityList().add(entityManager.find(Facility.class,10L));
 
         entityManager.persist(hotel1);
 
+
+        Hotel hotel2 = new Hotel();
+        hotel2.setUser(entityManager.find(User.class,5L));
+        hotel2.setCity("Cluj-Napoca");
+        hotel2.setName("Hotel Royal");
+        hotel2.getHotelFacilityList().add(entityManager.find(Facility.class,2L));
+        hotel2.getHotelFacilityList().add(entityManager.find(Facility.class,4L));
+        hotel2.getHotelFacilityList().add(entityManager.find(Facility.class,6L));
+        hotel2.getHotelFacilityList().add(entityManager.find(Facility.class,8L));
+        hotel2.getHotelFacilityList().add(entityManager.find(Facility.class,10L));
+        entityManager.persist(hotel2);
 
     }
 

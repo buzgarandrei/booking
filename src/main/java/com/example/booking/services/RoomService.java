@@ -1,9 +1,11 @@
 package com.example.booking.services;
 
+import com.example.booking.requests.PriceRequest;
 import com.example.booking.requests.RequestWith2Ids;
 import com.example.booking.requests.RoomRequest;
 import com.example.booking.requests.special_requests.RequestWithId;
 import com.example.booking.responses.FacilityResponse;
+import com.example.booking.responses.PriceResponse;
 import com.example.booking.responses.RoomResponse;
 import com.example.booking.utils.StateResponse;
 
@@ -23,4 +25,6 @@ public interface RoomService {
     StateResponse deleteRoomFacility(RequestWith2Ids request);
 
     List<FacilityResponse> getRoomFacilities(RequestWithId request);
+
+    List<PriceResponse> getPricesOfRoom(RequestWithId request);
 }

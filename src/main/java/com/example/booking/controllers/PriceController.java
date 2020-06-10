@@ -5,6 +5,7 @@ import com.example.booking.requests.special_requests.RequestWithId;
 import com.example.booking.responses.PriceResponse;
 import com.example.booking.services.AuthenticationService;
 import com.example.booking.services.PriceService;
+import com.example.booking.utils.RoleEnum;
 import com.example.booking.utils.StateResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,6 +34,8 @@ public class PriceController {
     @RequestMapping(value = "/addPrice", method = RequestMethod.POST)
     public StateResponse addPrice(HttpServletRequest servletRequest, @RequestBody PriceRequest request) {
 
+        boolean validated = authenticationService.validateTokenAndRole(servletRequest, RoleEnum.OWNER);
+        if(!validated) return  null;
         StateResponse stateResponse = new StateResponse();
         try {
             if(priceService.addPrice(request).isSuccess())

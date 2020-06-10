@@ -257,7 +257,7 @@ public class QueryTester {
 
         System.out.println(Utils.getNoDays(dateStartGiven, dateEndGiven));
 
-        *//*String sql = " select r.id," +
+        String sql = " select r.id," +
                 "       r.available," +
                 "       h_description.text as hotel_description," +
                 "       r.nr_of_adults," +
@@ -303,7 +303,7 @@ public class QueryTester {
                 " " +
                 " group by r.id" +
                 " having (total > 10)" +
-                " order by total";*//*
+                " order by total";
 
         Query query = entityManager.createNativeQuery(sql, Tuple.class);
 

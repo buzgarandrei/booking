@@ -49,6 +49,7 @@ public class Servicee {
 
     public void populate() throws Exception {
 
+        userTest.populateUsers();
         descriptionTest.addDescription();
         facilityTest.addFacility();
         hotelTest.addHotel();
@@ -57,9 +58,12 @@ public class Servicee {
         roomDescriptionTest.addRomDescription();
         priceTest.addPrice();
         priceTest.addPrice2();
+        priceTest.addPrice3();
+        priceTest.addPrice4();
+        priceTest.addPrice5();
         bedTypeTest.addBedType();
         roomBedListTest.addBedsToList();
-        userTest.populateUsers();
+
     }
     public List<SearchResponse> Run(SearchRequest request) throws Exception {
 

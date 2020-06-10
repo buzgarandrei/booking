@@ -19,9 +19,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.Serializable;
 import java.text.ParseException;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 public class UserController {
@@ -138,9 +139,6 @@ public class UserController {
     public UserResponse login(HttpServletRequest httpServletRequest, @RequestBody UserRequest userRequest) {
 
         UserResponse response = userService.login(userRequest);
-        if(response.getId() != null) {
-            response.setRoleEnum(userService.getUserRole(response.getId()));
-        }
 
         if(response.getId() != null  && response.getRoleEnum() != null) {
             String token;
@@ -159,7 +157,14 @@ public class UserController {
     }
 
     @RequestMapping(value = "/makeAppointment", method = RequestMethod.POST)
-    public AppointmentResponse makeAppointment(@RequestBody AppointmentRequest request) throws ParseException {
+    public AppointmentResponse makeAppointment(HttpServletRequest servletRequest, @RequestBody AppointmentRequest request) throws ParseException {
+
+        boolean validated = authenticationService.validateTokenAndRole(servletRequest, null);
+        if(!validated) return null;
+        Long idUser = authenticationService.getIdUser(servletRequest);
+        if(idUser == null) return null;
+        request.setUserId(idUser);
+
         return userService.makeAppointment(request);
     }
 }

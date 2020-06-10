@@ -1,6 +1,7 @@
 package com.example.booking.repositories;
 
 import com.example.booking.entities.Facility;
+import com.example.booking.entities.Price;
 import com.example.booking.requests.RequestWith2Ids;
 import com.example.booking.requests.RoomRequest;
 import com.example.booking.requests.special_requests.RequestWithId;
@@ -23,4 +24,6 @@ public interface RoomRepository {
     StateResponse deleteRoomFacility(RequestWith2Ids request);
 
     List<Facility> getRoomFacilities(RequestWithId request);
+
+    List<Price> getPricesOfRoom(RequestWithId request);
 }

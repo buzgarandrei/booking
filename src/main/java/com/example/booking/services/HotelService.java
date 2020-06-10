@@ -26,4 +26,6 @@ public interface HotelService {
     List<FacilityResponse> getHotelFacilities(RequestWithId request);
 
     List<RoomResponse> getRoomsOfAHotel(RequestWithId request);
+
+    List<HotelResponse> getHotelsOfOwner(RequestWithId requestWithId);
 }

@@ -1,5 +1,6 @@
 package com.example.booking.services;
 
+import com.example.booking.responses.UserResponse;
 import com.example.booking.utils.RoleEnum;
 import com.example.booking.utils.StateResponse;
 import com.example.booking.utils.UserSession;
@@ -75,6 +76,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
         stateResponse.setSuccess(true);
         return stateResponse;
+    }
+
+    @Override
+    public Long getIdUser(HttpServletRequest request) {
+        String token = request.getHeader(TOKEN);
+        if(token == null) return null;
+        UserSession response = userSessions.get(token);
+        if(response == null) return null;
+        Long id = response.getId();
+        if(id == null) return null;
+        return id;
     }
 
 }

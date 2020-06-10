@@ -88,6 +88,81 @@ public class DescriptionTest {
         description13.setLanguage(Language.RO);
         entityManager.persist(description13);
 
+        Description description14 = new Description();
+        description14.setLanguage(Language.EN);
+        description14.setText("Our parking lot has more then 200 places");
+        entityManager.persist(description14);
+
+        Description description15 = new Description();
+        description15.setText("This is the description of the Phone facility");
+        description15.setLanguage(Language.EN);
+        entityManager.persist(description15);
+
+        Description description16 = new Description();
+        description16.setLanguage(Language.EN);
+        description16.setText("This is the description of the Hotel Royal from Cluj-Napoca, a very important hotel from Gheorgheni neighbourhood");
+        entityManager.persist(description16);
+
+        Description description17 = new Description();
+        description17.setLanguage(Language.EN);
+        description17.setText("This is the description of the ALL - Inclusive facility");
+        entityManager.persist(description17);
+
+        Description description18 = new Description();
+        description18.setLanguage(Language.EN);
+        description18.setText("This is the description of the MiniBar facility");
+        entityManager.persist(description18);
+
+        Description description19 = new Description();
+        description19.setLanguage(Language.EN);
+        description19.setText("This is the description of the Restaurant facility");
+        entityManager.persist(description19);
+
+        Description description20 = new Description();
+        description20.setLanguage(Language.EN);
+        description20.setText("This is the description of the Smoking Friendley facility");
+        entityManager.persist(description20);
+
+        Description description21 = new Description();
+        description21.setLanguage(Language.EN);
+        description21.setText("This is the description of the Barbecue terrace amenaged place facility");
+        entityManager.persist(description21);
+
+        Description description22 = new Description();
+        description22.setLanguage(Language.RO);
+        description22.setText("Aceasta e descrierea camerei cu nr 3 din bd, apartine de Wonderland");
+        entityManager.persist(description22);
+
+        Description description23 = new Description();
+        description23.setLanguage(Language.EN);
+        description23.setText("This is the description of the Room 3 from db, a room of Wonderland");
+        entityManager.persist(description23);
+
+        Description description24 = new Description();
+        description24.setLanguage(Language.RO);
+        description24.setText("Aceasta e descrierea camerei cu nr 4 din bd, apartine de Continental");
+        entityManager.persist(description24);
+
+        Description description25 = new Description();
+        description25.setLanguage(Language.EN);
+        description25.setText("This is the description of the Room 4 from db, a room of Continental");
+        entityManager.persist(description25);
+
+        Description description26 = new Description();
+        description26.setLanguage(Language.RO);
+        description26.setText("Aceasta e descrierea camerei cu nr 5 din bd, apartine de Royal");
+        entityManager.persist(description26);
+
+        Description description27 = new Description();
+        description27.setLanguage(Language.EN);
+        description27.setText("This is the description of the Room 5 from db, a room of Royal");
+        entityManager.persist(description27);
+
+        Description description28 = new Description();
+        description28.setLanguage(Language.RO);
+        description28.setText("Aceasta e descrierea camerei cu nr 1 din bd, apartine de Wonderland");
+        entityManager.persist(description28);
+
 
     }
 

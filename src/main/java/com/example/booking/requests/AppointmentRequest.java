@@ -2,21 +2,12 @@ package com.example.booking.requests;
 
 public class AppointmentRequest {
 
-    private Long id;
     private String startDate;
     private String endDate;
     private Long userId;
     private Long roomId;
 
     public AppointmentRequest() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getStartDate() {

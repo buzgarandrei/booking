@@ -132,7 +132,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Transactional(readOnly = true)
     public UserResponse login(UserRequest userRequest) {
 
-        Query query = entityManager.createQuery("select user.id, user.name from User user" +
+        Query query = entityManager.createQuery("select user.id, user.name, user.roleEnum from User user" +
                 " where user.email = :email and user.password = :pass", Tuple.class);
         query.setParameter("email", userRequest.getEmail());
         query.setParameter("pass", userRequest.getPassword());
@@ -142,6 +142,7 @@ public class UserRepositoryImpl implements UserRepository {
         if(tuple != null) {
             response.setId((Long) tuple.get(0));
             response.setName(tuple.get(1).toString());
+            response.setRoleEnum((RoleEnum) tuple.get(2));
         }
         return response;
 
@@ -164,13 +165,14 @@ public class UserRepositoryImpl implements UserRepository {
         query.setParameter("language", language);
         query.setParameter("id", idRoom);
 
-        return (String) query.getSingleResult();
+        return (String) query.getResultList().stream().findFirst().orElse(null);
     }
 
     @Transactional
     public List<FacilityResponse> getRoomFacilities(Long idRoom) {
 
-        Query query = entityManager.createQuery("select room.facilityList from Room  room where room.id = :id ", Collection.class);
+        Query query = entityManager.createQuery("select room.facilityList from Room  room " +
+                                                    "where room.id = :id ", Collection.class);
         query.setParameter("id", idRoom);
         List<Facility> resultList = query.getResultList();
         List<FacilityResponse> responseList = new ArrayList<>();
@@ -218,7 +220,7 @@ public class UserRepositoryImpl implements UserRepository {
                 " and room.hotel.city = : city and hotelFacility.facilityNameEnum = :enum1 and roomFacility.facilityNameEnum = :enum2 ", Room.class);*/
 
         Query query = entityManager.createQuery(" select room from Room room " +
-                " where room.available = true and room.nrOfAdults = :nrOfAdults and room.nrOfKids = :nrOfKids " +
+                " where room.available = true and room.nrOfAdults >= :nrOfAdults and room.nrOfKids >= :nrOfKids " +
                 " and room.hotel.city = :city ", Room.class);
         query.setParameter("nrOfAdults", request.getNrOfAdults());
         query.setParameter("nrOfKids", request.getNrOfKids());
@@ -241,7 +243,9 @@ public class UserRepositoryImpl implements UserRepository {
             response.setRoomFacilities(getRoomFacilities(room.getId()));
             response.setHotelFacilities(getHotelFacilities(room.getId()));
 
-            responseList.add(response);
+            if(response.getTotal() > 10) {
+                responseList.add(response);
+            }
         }
         return responseList;
     }
@@ -262,8 +266,9 @@ public class UserRepositoryImpl implements UserRepository {
 
 
         Query queryPrice = entityManager.createQuery(" select prices from Price prices  " +
-                " where (prices.startDate between :dateStart and :dateEnd or " +
-                " prices.endDate between :dateStart and :dateEnd) and prices.room.id = :id", Price.class);
+                " where ((prices.startDate between :dateStart and :dateEnd or " +
+                " prices.endDate between :dateStart and :dateEnd) or " +
+                "( :dateStart between prices.startDate and prices.endDate or :dateEnd between prices.startDate and prices.endDate))and prices.room.id = :id", Price.class);
 
         queryPrice.setParameter("dateStart", dateStartGiven);
         queryPrice.setParameter("dateEnd", dateEndGiven);

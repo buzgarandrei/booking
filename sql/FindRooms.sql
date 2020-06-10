@@ -42,7 +42,7 @@ where r.available = 1
   and h.city = 'Cluj-Napoca'
   and hfacility.facility_name = 'POOL'
   and rfacility.facility_name = 'WIFI'
-  and (p.start_date between '2019-12-17' and '2020-01-02' or p.end_date between '2019-12-17' and '2020-01-02')
+  and (p.start_date between '2020-06-28' and '2020-07-08' or p.end_date between '2019-06-28' and '2020-07-08')
 
 /*group by r.id
 having ()

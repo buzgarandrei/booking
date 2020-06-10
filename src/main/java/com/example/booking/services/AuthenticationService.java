@@ -14,4 +14,6 @@ public interface AuthenticationService {
     public Long getUserIdByToken(HttpServletRequest httpServletRequest);
 
     public StateResponse logout(HttpServletRequest servletRequest);
+
+    public Long getIdUser(HttpServletRequest request);
 }

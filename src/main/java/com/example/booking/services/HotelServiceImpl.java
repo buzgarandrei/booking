@@ -92,4 +92,9 @@ public class HotelServiceImpl implements HotelService {
         }
         return responseList;
     }
+
+    @Override
+    public List<HotelResponse> getHotelsOfOwner(RequestWithId requestWithId) {
+        return hotelRepository.getHotelsOfOwner(requestWithId);
+    }
 }

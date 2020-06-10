@@ -1,9 +1,11 @@
 package com.example.booking.controllers;
 
+import com.example.booking.requests.PriceRequest;
 import com.example.booking.requests.RequestWith2Ids;
 import com.example.booking.requests.RoomRequest;
 import com.example.booking.requests.special_requests.RequestWithId;
 import com.example.booking.responses.FacilityResponse;
+import com.example.booking.responses.PriceResponse;
 import com.example.booking.responses.RoomResponse;
 import com.example.booking.services.AuthenticationService;
 import com.example.booking.services.RoomService;
@@ -43,6 +45,8 @@ public class RoomController {
     @RequestMapping(value = "/addRoom", method = RequestMethod.POST)
     public StateResponse addRoom(HttpServletRequest servletRequest, @RequestBody RoomRequest roomRequest) {
 
+        boolean validated = authenticationService.validateTokenAndRole(servletRequest,RoleEnum.OWNER);
+        if(!validated) return null;
         StateResponse stateResponse = new StateResponse();
         try {
             if(roomService.addRoom(roomRequest).isSuccess())
@@ -118,5 +122,13 @@ public class RoomController {
     @RequestMapping(value = "/getRoomFacilities")
     public List<FacilityResponse> getRoomFacilities(@RequestBody RequestWithId request) {
         return roomService.getRoomFacilities(request);
+    }
+
+    @RequestMapping(value = "getPricesOfRoom", method = RequestMethod.POST)
+    public List<PriceResponse> getPricesOfRoom(HttpServletRequest sr, @RequestBody RequestWithId request) {
+        boolean validateOwner = authenticationService.validateTokenAndRole(sr, RoleEnum.OWNER);
+        boolean validateAdmin = authenticationService.validateTokenAndRole(sr, RoleEnum.ADMIN);
+        if(!validateAdmin && !validateOwner) return null;
+        return roomService.getPricesOfRoom(request);
     }
 }

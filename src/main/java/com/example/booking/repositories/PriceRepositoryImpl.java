@@ -38,6 +38,7 @@ public class PriceRepositoryImpl implements PriceRepository {
             response.setStartDate(price.getStartDate().toString());
             response.setEndDate(price.getEndDate().toString());
             response.setIdRoom(price.getRoom().getId());
+            response.setId(price.getId());
 
             responseList.add(response);
         }

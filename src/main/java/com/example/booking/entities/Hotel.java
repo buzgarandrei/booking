@@ -1,5 +1,6 @@
 package com.example.booking.entities;
 
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,18 @@ public class Hotel {
                 joinColumns = @JoinColumn(name = "id_hotel"),
                 inverseJoinColumns = @JoinColumn(name = "id_facility"))
     private List<Facility> hotelFacilityList = new ArrayList<>();
+
+    @ManyToOne( fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_user")
+    private User user;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public Hotel() {
     }

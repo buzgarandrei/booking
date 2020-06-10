@@ -1,11 +1,13 @@
 package com.example.booking.services;
 
 import com.example.booking.entities.Facility;
+import com.example.booking.entities.Price;
 import com.example.booking.repositories.RoomRepository;
 import com.example.booking.requests.RequestWith2Ids;
 import com.example.booking.requests.RoomRequest;
 import com.example.booking.requests.special_requests.RequestWithId;
 import com.example.booking.responses.FacilityResponse;
+import com.example.booking.responses.PriceResponse;
 import com.example.booking.responses.RoomResponse;
 import com.example.booking.utils.StateResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +72,22 @@ public class RoomServiceImpl implements RoomService {
             response.setSVG(entity.getSVG());
             response.setFacilityType(entity.getFacilityType());
 
+            responseList.add(response);
+        }
+        return responseList;
+    }
+
+    @Override
+    public List<PriceResponse> getPricesOfRoom(RequestWithId request) {
+        List<Price> priceList = roomRepository.getPricesOfRoom(request);
+        List<PriceResponse> responseList = new ArrayList<>();
+        for (Price price : priceList) {
+            PriceResponse response = new PriceResponse();
+            response.setId(price.getId());
+            response.setAmount(price.getAmount());
+            response.setEndDate(String.valueOf(price.getEndDate()));
+            response.setStartDate(String.valueOf(price.getStartDate()));
+            response.setIdRoom(price.getRoom().getId());
             responseList.add(response);
         }
         return responseList;
