@@ -42,24 +42,26 @@ public class DescriptionRepositoryImpl implements DescriptionRepository {
 
     @Override
     @Transactional
-    public StateResponse addDescription(DescriptionRequest request) {
+    public Long addDescription(DescriptionRequest request) {
 
         StateResponse stateResponse = new StateResponse();
         Description description = new Description();
-        if(request.getLanguage() == null) {
+        /*if(request.getLanguage() == null) {
             stateResponse.setSuccess(false);
             return stateResponse;
-        }
+        }*/
         description.setLanguage(request.getLanguage());
-        if(request.getText() == null) {
+        /*if(request.getText() == null) {
             stateResponse.setSuccess(false);
             return stateResponse;
-        }
+        }*/
         description.setText(request.getText());
 
         entityManager.persist(description);
+        entityManager.flush();
         stateResponse.setSuccess(true);
-        return stateResponse;
+        return description.getId();
+        //return stateResponse;
     }
 
     @Override
@@ -87,5 +89,16 @@ public class DescriptionRepositoryImpl implements DescriptionRepository {
         Description description = entityManager.find(Description.class, request.getId());
 
         entityManager.remove(description);
+    }
+
+    @Override
+
+    public Description getDescriptionById(RequestWithId idDto) {
+        if (idDto == null) return null;
+        Description description = entityManager.find(Description.class,idDto.getId());
+        if (description == null)
+            return null;
+        description.setFacilityList(null);
+        return description;
     }
 }

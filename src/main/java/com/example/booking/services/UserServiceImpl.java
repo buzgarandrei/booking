@@ -48,21 +48,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void makeAdmin(RequestWithId request) {
+    public StateResponse makeAdmin(RequestWithId request) {
 
-        userRepository.makeAdmin(request);
+        return userRepository.makeAdmin(request);
     }
 
     @Override
-    public void makeOwner(RequestWithId request) {
+    public StateResponse makeOwner(RequestWithId request) {
 
-        userRepository.makeOwner(request);
+        return userRepository.makeOwner(request);
     }
 
     @Override
-    public void makePremiumUser(RequestWithId request) {
+    public StateResponse makePremiumUser(RequestWithId request) {
 
-        userRepository.makePremiumUser(request);
+        return userRepository.makePremiumUser(request);
     }
 
     @Override
@@ -84,5 +84,26 @@ public class UserServiceImpl implements UserService {
     @Override
     public AppointmentResponse makeAppointment(AppointmentRequest request) throws ParseException {
         return userRepository.makeAppointment(request);
+    }
+
+    @Override
+    public List<AppointmentResponse> getUserAppointments(Long idUser) {
+        return userRepository.getUserAppointments(idUser);
+    }
+
+    @Override
+    public StateResponse acceptAppointment(RequestWithId requestWithId) {
+        return userRepository.acceptAppointment(requestWithId);
+    }
+
+    @Override
+    public StateResponse refuseAppointment(RequestWithId requestWithId) {
+        return userRepository.refuseAppointment(requestWithId);
+    }
+
+    @Override
+    public StateResponse makeBasicUser(RequestWithId requestWithId) {
+
+        return userRepository.makeBasicUser(requestWithId);
     }
 }

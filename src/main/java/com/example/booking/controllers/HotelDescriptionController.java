@@ -30,7 +30,8 @@ public class HotelDescriptionController {
 
     @RequestMapping(value = "/getDescriptionsOfAHotel")
     public List<HotelDescriptionResponse> getDescriptionsOfAHotel(@RequestBody RequestWithId request) {
-        return hotelDescriptionService.getDescriptionsOfAHotel(request);
+        List<HotelDescriptionResponse> list = hotelDescriptionService.getDescriptionsOfAHotel(request);
+        return list;
     }
 
     @RequestMapping(value = "/addHotelDescription", method = RequestMethod.POST)

@@ -1,5 +1,7 @@
 package com.example.booking.entities;
 
+import com.example.booking.utils.StatusAppointment;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -24,6 +26,16 @@ public class Appointment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_room")
     private Room room;
+
+    @Column(name = "hotel_name")
+    private String hotelName;
+
+    @Column
+    @Enumerated(value = EnumType.STRING)
+    private StatusAppointment status;
+
+    @Column
+    private boolean paid;
 
     @Column
     private float ammount;
@@ -77,5 +89,29 @@ public class Appointment {
 
     public void setAmmount(float ammount) {
         this.ammount = ammount;
+    }
+
+    public String getHotelName() {
+        return hotelName;
+    }
+
+    public void setHotelName(String hotelName) {
+        this.hotelName = hotelName;
+    }
+
+    public boolean isPaid() {
+        return paid;
+    }
+
+    public void setPaid(boolean paid) {
+        this.paid = paid;
+    }
+
+    public StatusAppointment getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusAppointment status) {
+        this.status = status;
     }
 }

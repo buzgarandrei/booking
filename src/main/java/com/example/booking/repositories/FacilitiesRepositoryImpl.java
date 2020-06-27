@@ -46,12 +46,10 @@ public class FacilitiesRepositoryImpl implements FacilitiesRepository {
 
     @Override
     @Transactional
-    public StateResponse addFacility(FacilityRequest request) {
+    public Long addFacility(FacilityRequest request) {
 
-        StateResponse stateResponse = new StateResponse();
         if (request.getSVG() == null || request.getFacilityType() == null || request.getFacilityName() == null) {
-            stateResponse.setSuccess(false);
-            return stateResponse;
+            return null;
         }
         Facility facility = new Facility();
         facility.setSVG(request.getSVG());
@@ -59,8 +57,8 @@ public class FacilitiesRepositoryImpl implements FacilitiesRepository {
         facility.setFacilityName(request.getFacilityName());
 
         entityManager.persist(facility);
-        stateResponse.setSuccess(true);
-        return stateResponse;
+        entityManager.flush();
+        return facility.getId();
     }
 
     @Override

@@ -1,12 +1,10 @@
 package com.example.booking.repositories;
 
-import com.example.booking.entities.Facility;
-import com.example.booking.entities.Hotel;
-import com.example.booking.entities.Room;
-import com.example.booking.entities.User;
+import com.example.booking.entities.*;
 import com.example.booking.requests.HotelRequest;
 import com.example.booking.requests.RequestWith2Ids;
 import com.example.booking.requests.special_requests.RequestWithId;
+import com.example.booking.responses.AppointmentResponse;
 import com.example.booking.responses.HotelResponse;
 import com.example.booking.utils.RoleEnum;
 import com.example.booking.utils.StateResponse;
@@ -18,6 +16,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Repository
@@ -185,6 +184,32 @@ public class HotelRepositoryImpl implements HotelRepository {
             response.setCity(hotel.getCity());
             response.setName(hotel.getName());
             response.setId(hotel.getId());
+            responseList.add(response);
+        }
+        return responseList;
+    }
+
+    @Override
+    @Transactional
+    public List<AppointmentResponse> getAppointmentsAtAHotel(Long idUser) {
+
+        List<Appointment> appointments = entityManager.createQuery("select app from Appointment app " +
+                "where app.room.hotel.user.id = :idUser", Appointment.class)
+                .setParameter("idUser", idUser)
+                .getResultList();
+        List<AppointmentResponse> responseList = new ArrayList<>();
+        for (Appointment appointment : appointments) {
+
+            AppointmentResponse response = new AppointmentResponse();
+            response.setStatus(appointment.getStatus().name());
+            response.setPaid(appointment.isPaid());
+            response.setHotelName(appointment.getHotelName());
+            response.setId(appointment.getId());
+            response.setUserId(appointment.getUser().getId());
+            response.setRoomId(appointment.getRoom().getId());
+            response.setStartDate(appointment.getStartDate().toString());
+            response.setEndDate(appointment.getEndDate().toString());
+            response.setAmmount(appointment.getAmmount());
             responseList.add(response);
         }
         return responseList;

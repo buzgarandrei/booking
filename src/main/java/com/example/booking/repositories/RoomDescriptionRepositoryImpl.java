@@ -88,10 +88,10 @@ public class RoomDescriptionRepositoryImpl implements RoomDescriptionRepository 
     }
 
     @Override
-    @org.springframework.data.jpa.repository.Query
+    @Transactional
     public List<RoomDescription> getDescriptionsOfARoom(RequestWithId request) {
         Query query = entityManager.createQuery("select rd from RoomDescription rd " +
-                "where rd.id = :id",RoomDescription.class)
+                "where rd.room.id = :id",RoomDescription.class)
                 .setParameter("id",request.getId());
         List<RoomDescription> resultList = query.getResultList();
         return  resultList;

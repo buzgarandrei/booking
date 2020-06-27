@@ -3,6 +3,7 @@ package com.example.booking.controllers;
 import com.example.booking.requests.HotelRequest;
 import com.example.booking.requests.RequestWith2Ids;
 import com.example.booking.requests.special_requests.RequestWithId;
+import com.example.booking.responses.AppointmentResponse;
 import com.example.booking.responses.FacilityResponse;
 import com.example.booking.responses.HotelResponse;
 import com.example.booking.responses.RoomResponse;
@@ -112,12 +113,14 @@ public class HotelController {
         return stateResponse;
     }
 
-    @RequestMapping(value = "/getHotelFacilities")
-    public List<FacilityResponse> getHotelFacilities(@RequestBody RequestWithId request) {
+    @RequestMapping(value = "getHotelFacilities")
+    public List<FacilityResponse> getHotelFacilities(HttpServletRequest servletRequest, @RequestBody RequestWithId request) {
+        boolean validated = authenticationService.validateTokenAndRole(servletRequest, RoleEnum.OWNER);
+        if (!validated) return null;
         return hotelService.getHotelFacilities(request);
     }
 
-    @RequestMapping(value = "/getRoomsOfAHotel", method = RequestMethod.POST)
+    @RequestMapping(value = "getRoomsOfAHotel", method = RequestMethod.POST)
     public List<RoomResponse> getRoomsOfAHotel(@RequestBody RequestWithId request) {
         return hotelService.getRoomsOfAHotel(request);
     }
@@ -129,6 +132,14 @@ public class HotelController {
         RequestWithId requestWithId = new RequestWithId();
         requestWithId.setId(authenticationService.getIdUser(request));
         return hotelService.getHotelsOfOwner(requestWithId);
+    }
+
+    @RequestMapping(path = "getAppointmentsAtAHotel", method = RequestMethod.POST)
+    public List<AppointmentResponse> getAppointmentsAtAHotel(HttpServletRequest request) {
+        boolean validated = authenticationService.validateTokenAndRole(request, RoleEnum.OWNER);
+        if(!validated)  return null;
+        Long idUser = authenticationService.getIdUser(request);
+        return hotelService.getAppointmentsAtAHotel(idUser);
     }
 
 

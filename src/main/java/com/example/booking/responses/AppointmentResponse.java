@@ -8,6 +8,9 @@ public class AppointmentResponse {
     private Long userId;
     private Long roomId;
     private float ammount;
+    private String hotelName;
+    private boolean paid;
+    private String status;
 
     public AppointmentResponse() {
     }
@@ -58,5 +61,29 @@ public class AppointmentResponse {
 
     public void setAmmount(float ammount) {
         this.ammount = ammount;
+    }
+
+    public String getHotelName() {
+        return hotelName;
+    }
+
+    public void setHotelName(String hotelName) {
+        this.hotelName = hotelName;
+    }
+
+    public boolean isPaid() {
+        return paid;
+    }
+
+    public void setPaid(boolean paid) {
+        this.paid = paid;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

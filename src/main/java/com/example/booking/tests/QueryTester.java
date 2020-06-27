@@ -27,6 +27,7 @@ public class QueryTester {
     @PersistenceContext
     EntityManager entityManager;
 
+
     @Transactional
     public void getHotelsWithRequestedFacility() {
 

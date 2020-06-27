@@ -32,7 +32,7 @@ public class Facility {
                 inverseJoinColumns = @JoinColumn(name = "id_description"))
     private List<Description> descriptionList = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "facilityList")
+    @ManyToMany(mappedBy = "facilityList", cascade = CascadeType.ALL)
     private List<Room> roomList = new ArrayList<>();
 
     @ManyToMany(mappedBy = "hotelFacilityList")

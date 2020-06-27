@@ -22,11 +22,11 @@ public interface UserRepository {
 
     void deleteUser(RequestWithId request);
 
-    void makeAdmin(RequestWithId request);
+    StateResponse makeAdmin(RequestWithId request);
 
-    void makeOwner(RequestWithId request);
+    StateResponse makeOwner(RequestWithId request);
 
-    void makePremiumUser(RequestWithId request);
+    StateResponse makePremiumUser(RequestWithId request);
 
     UserResponse login(UserRequest userRequest);
 
@@ -35,4 +35,12 @@ public interface UserRepository {
     AppointmentResponse makeAppointment(AppointmentRequest request) throws ParseException;
 
     List<SearchResponse> search (SearchRequest request) throws ParseException;
+
+    List<AppointmentResponse> getUserAppointments(Long idUser);
+
+    StateResponse acceptAppointment(RequestWithId requestWithId);
+
+    StateResponse refuseAppointment(RequestWithId requestWithId);
+
+    StateResponse makeBasicUser(RequestWithId requestWithId);
 }

@@ -1,11 +1,12 @@
 package com.example.booking.controllers;
 
+import com.example.booking.entities.Description;
 import com.example.booking.requests.DescriptionRequest;
 import com.example.booking.requests.special_requests.RequestWithId;
 import com.example.booking.responses.DescriptionResponse;
 import com.example.booking.services.AuthenticationService;
 import com.example.booking.services.DescriptionService;
-import com.example.booking.utils.Language;
+import com.example.booking.utils.RoleEnum;
 import com.example.booking.utils.StateResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Locale;
 
 @RestController
 public class DescriptionController {
@@ -32,19 +32,9 @@ public class DescriptionController {
     }
 
     @RequestMapping(value = "/addDescription", method = RequestMethod.POST)
-    public StateResponse addDescription(HttpServletRequest servletRequest, @RequestBody DescriptionRequest request, Locale locale) {
-        request.setLanguage(Language.valueOf(locale.getLanguage().toUpperCase()));
-        StateResponse stateResponse = new StateResponse();
-        try {
-            if(descriptionService.addDescription(request).isSuccess())
-                stateResponse.setSuccess(true);
-            else stateResponse.setSuccess(false);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            stateResponse.setSuccess(false);
-        }
-        return stateResponse;
+    public Long addDescription(HttpServletRequest servletRequest, @RequestBody DescriptionRequest request) {
+
+        return descriptionService.addDescription(request);
     }
 
     @RequestMapping(value = "/updateDescription", method = RequestMethod.POST)
@@ -74,5 +64,12 @@ public class DescriptionController {
             stateResponse.setSuccess(false);
         }
         return stateResponse;
+    }
+
+    @RequestMapping(value = "getDescriptionById", method = RequestMethod.POST)
+    public Description getDescriptionById(HttpServletRequest request, @RequestBody RequestWithId idDto) {
+        boolean validated = authenticationService.validateTokenAndRole(request, RoleEnum.OWNER);
+        if (!validated) return null;
+        return descriptionService.getDescriptionById(idDto);
     }
 }

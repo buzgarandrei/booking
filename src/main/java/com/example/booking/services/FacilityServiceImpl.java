@@ -25,7 +25,7 @@ public class FacilityServiceImpl implements FacilityService {
     }
 
     @Override
-    public StateResponse addFacility(FacilityRequest request) {
+    public Long addFacility(FacilityRequest request) {
 
         return facilitiesRepository.addFacility(request);
     }

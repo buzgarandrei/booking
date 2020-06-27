@@ -19,10 +19,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.Serializable;
 import java.text.ParseException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RestController
 public class UserController {
@@ -90,6 +88,8 @@ public class UserController {
     @RequestMapping(value = "/makeAdmin", method = RequestMethod.POST)
     public StateResponse makeAdmin(HttpServletRequest servletRequest, @RequestBody RequestWithId request) {
 
+        boolean validated = authenticationService.validateTokenAndRole(servletRequest,RoleEnum.ADMIN);
+        if (!validated) return null;
         StateResponse stateResponse = new StateResponse();
 
         try {
@@ -103,11 +103,19 @@ public class UserController {
         return stateResponse;
     }
 
+    @RequestMapping(value = "makeBasicUser", method = RequestMethod.POST)
+    public StateResponse makeBasicUser(HttpServletRequest request, @RequestBody RequestWithId requestWithId) {
+        boolean validated = authenticationService.validateTokenAndRole(request,RoleEnum.ADMIN);
+        if (!validated) return null;
+        return userService.makeBasicUser(requestWithId);
+    }
+
     @RequestMapping(value = "/makeOwner", method = RequestMethod.POST)
     public StateResponse makeOwner(HttpServletRequest servletRequest, @RequestBody RequestWithId request) {
 
+        boolean validated = authenticationService.validateTokenAndRole(servletRequest,RoleEnum.ADMIN);
+        if (!validated) return null;
         StateResponse stateResponse = new StateResponse();
-
         try {
             userService.makeOwner(request);
             stateResponse.setSuccess(true);
@@ -122,6 +130,8 @@ public class UserController {
     @RequestMapping(value = "/makePremiumUser", method = RequestMethod.POST)
     public StateResponse makePremiumUser(HttpServletRequest servletRequest, @RequestBody RequestWithId request) {
 
+        boolean validated = authenticationService.validateTokenAndRole(servletRequest,RoleEnum.ADMIN);
+        if (!validated) return null;
         StateResponse stateResponse = new StateResponse();
 
         try {
@@ -150,6 +160,11 @@ public class UserController {
         return response;
     }
 
+    @RequestMapping(value = "logout")
+    public StateResponse logout(HttpServletRequest request) {
+        return authenticationService.logout(request);
+    }
+
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     public List<SearchResponse> search(Locale locale, @RequestBody SearchRequest request) throws ParseException {
         request.setLanguage(Language.valueOf(locale.getLanguage().toUpperCase()));
@@ -159,12 +174,39 @@ public class UserController {
     @RequestMapping(value = "/makeAppointment", method = RequestMethod.POST)
     public AppointmentResponse makeAppointment(HttpServletRequest servletRequest, @RequestBody AppointmentRequest request) throws ParseException {
 
-        boolean validated = authenticationService.validateTokenAndRole(servletRequest, null);
-        if(!validated) return null;
+        boolean validated1 = authenticationService.validateTokenAndRole(servletRequest, RoleEnum.PREMIUM_USER);
+        boolean validated2 = authenticationService.validateTokenAndRole(servletRequest, RoleEnum.BASIC_USER);
+        if(!validated1 && !validated2) return null;
         Long idUser = authenticationService.getIdUser(servletRequest);
         if(idUser == null) return null;
         request.setUserId(idUser);
 
         return userService.makeAppointment(request);
     }
+    @RequestMapping(value = "getUserAppointments", method = RequestMethod.POST)
+    public List<AppointmentResponse> getUserAppointments(HttpServletRequest request) {
+        boolean validated1 = authenticationService.validateTokenAndRole(request,RoleEnum.BASIC_USER);
+        boolean validated2 = authenticationService.validateTokenAndRole(request,RoleEnum.PREMIUM_USER);
+        if(!validated1 && !validated2) return null;
+        Long idUser = authenticationService.getIdUser(request);
+        if(idUser == null) return null;
+        return userService.getUserAppointments(idUser);
+
+    }
+
+    @RequestMapping( value = "acceptAppointment", method = RequestMethod.POST)
+    public StateResponse acceptAppointment(HttpServletRequest request, @RequestBody RequestWithId requestWithId) {
+        boolean validated = authenticationService.validateTokenAndRole(request,RoleEnum.OWNER);
+        if (!validated) return  null;
+        return userService.acceptAppointment(requestWithId);
+
+    }
+
+    @RequestMapping(value = "refuseAppointment", method = RequestMethod.POST)
+    public StateResponse refuseAppointment (HttpServletRequest request, @RequestBody RequestWithId requestWithId) {
+        boolean validated = authenticationService.validateTokenAndRole(request,RoleEnum.OWNER);
+        if (!validated) return null;
+        return userService.refuseAppointment(requestWithId);
+    }
+
 }

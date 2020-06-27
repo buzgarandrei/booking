@@ -120,7 +120,9 @@ public class RoomController {
     }
 
     @RequestMapping(value = "/getRoomFacilities")
-    public List<FacilityResponse> getRoomFacilities(@RequestBody RequestWithId request) {
+    public List<FacilityResponse> getRoomFacilities(HttpServletRequest servletRequest, @RequestBody RequestWithId request) {
+        boolean validated = authenticationService.validateTokenAndRole(servletRequest,RoleEnum.OWNER);
+        if (!validated) return null;
         return roomService.getRoomFacilities(request);
     }
 

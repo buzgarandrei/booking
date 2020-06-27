@@ -191,7 +191,7 @@ class PriceTest {
         String dateStart1 = "2020-07-01";
         price1.setStartDate(parseStringToDate(dateStart1));
         String dateEnd1 = "2020-07-12";
-        price1.setEndDate(parseStringToDate(dateEnd));
+        price1.setEndDate(parseStringToDate(dateEnd1));
         price1.setRoom(entityManager.find(Room.class,4L));
         price1.setAmount((float) 11.5);
         entityManager.persist(price1);

@@ -53,7 +53,7 @@ public class HotelDescriptionRepositoryImpl implements HotelDescriptionRepositor
 
         hotelDescription.setHotelDescriptionType(HotelDescriptionType.valueOf(request.getHotelDescriptionType()));
         entityManager.persist(hotelDescription);
-    stateResponse.setSuccess(true);
+        stateResponse.setSuccess(true);
         return stateResponse;
     }
 
@@ -95,7 +95,7 @@ public class HotelDescriptionRepositoryImpl implements HotelDescriptionRepositor
     @Transactional
     public List<HotelDescription> getDescriptionsOfAHotel(RequestWithId request) {
         Query query = entityManager
-                .createQuery("select d from HotelDescription d where d.id = :id", HotelDescription.class)
+                .createQuery("select d from HotelDescription d where d.hotel.id = :id", HotelDescription.class)
                 .setParameter("id",request.getId());
         List<HotelDescription> resultList = query.getResultList();
         return resultList;

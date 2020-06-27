@@ -6,6 +6,7 @@ import com.example.booking.requests.special_requests.RequestWithId;
 import com.example.booking.responses.FacilityResponse;
 import com.example.booking.services.AuthenticationService;
 import com.example.booking.services.FacilityService;
+import com.example.booking.utils.RoleEnum;
 import com.example.booking.utils.StateResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +21,7 @@ import java.util.List;
 import java.util.Locale;
 
 @RestController
-public class FacilityController {
+public class  FacilityController {
 
     @Autowired
     FacilityService facilityService;
@@ -37,21 +38,12 @@ public class FacilityController {
     }
 
     @RequestMapping(value = "/addFacility", method = RequestMethod.POST)
-    public StateResponse addFacility(HttpServletRequest servletRequest, @RequestBody FacilityRequest request) {
+    public Long addFacility(HttpServletRequest servletRequest, @RequestBody FacilityRequest request) {
 
-        //Locale locale = new Locale("fr");
-        //WebUtils.setSessionAttribute(servletRequest, SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, locale);
-        StateResponse stateResponse = new StateResponse();
-        try {
-            if(facilityService.addFacility(request).isSuccess())
-                stateResponse.setSuccess(true);
-            else stateResponse.setSuccess(false);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            stateResponse.setSuccess(false);
-        }
-        return stateResponse;
+        boolean validated = authenticationService.validateTokenAndRole(servletRequest, RoleEnum.ADMIN);
+        boolean validated2 = authenticationService.validateTokenAndRole(servletRequest,RoleEnum.OWNER);
+        if (!validated && !validated2)  return null;
+        return facilityService.addFacility(request);
     }
 
     @RequestMapping(value = "/updateFacility", method = RequestMethod.POST)

@@ -1,6 +1,5 @@
 package com.example.booking.services;
 
-import com.example.booking.responses.UserResponse;
 import com.example.booking.utils.RoleEnum;
 import com.example.booking.utils.StateResponse;
 import com.example.booking.utils.UserSession;
@@ -15,7 +14,7 @@ import java.util.UUID;
 public class AuthenticationServiceImpl implements AuthenticationService {
 
     private static final String TOKEN = "TOKEN";
-    private static final boolean VALIDATION_IS_ACTIVE = false;
+    private static final boolean VALIDATION_IS_ACTIVE = true;
 
     private static final Map<String, UserSession> userSessions = new HashMap<String,UserSession>();
 

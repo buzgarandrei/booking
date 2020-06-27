@@ -1,5 +1,7 @@
 package com.example.booking.responses;
 
+import com.example.booking.utils.RoomAvailability;
+
 import java.util.List;
 
 public class SearchResponse {
@@ -10,6 +12,9 @@ public class SearchResponse {
     private List<FacilityResponse> hotelFacilities;
     private String startDate;
     private String endDate;
+    private String hotelName;
+    private String hotelDescription;
+    private RoomAvailability roomAvailability;
 
     public SearchResponse() {
     }
@@ -78,5 +83,29 @@ public class SearchResponse {
 
     public void setHotelFacilities(List<FacilityResponse> hotelFacilities) {
         this.hotelFacilities = hotelFacilities;
+    }
+
+    public String getHotelName() {
+        return hotelName;
+    }
+
+    public void setHotelName(String hotelName) {
+        this.hotelName = hotelName;
+    }
+
+    public String getHotelDescription() {
+        return hotelDescription;
+    }
+
+    public void setHotelDescription(String hotelDescription) {
+        this.hotelDescription = hotelDescription;
+    }
+
+    public RoomAvailability getRoomAvailability() {
+        return roomAvailability;
+    }
+
+    public void setRoomAvailability(RoomAvailability roomAvailability) {
+        this.roomAvailability = roomAvailability;
     }
 }

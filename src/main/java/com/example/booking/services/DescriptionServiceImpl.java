@@ -1,5 +1,6 @@
 package com.example.booking.services;
 
+import com.example.booking.entities.Description;
 import com.example.booking.repositories.DescriptionRepository;
 import com.example.booking.requests.DescriptionRequest;
 import com.example.booking.requests.special_requests.RequestWithId;
@@ -23,7 +24,7 @@ public class DescriptionServiceImpl implements DescriptionService {
     }
 
     @Override
-    public StateResponse addDescription(DescriptionRequest request) {
+    public Long addDescription(DescriptionRequest request) {
         return descriptionRepository.addDescription(request);
     }
 
@@ -38,4 +39,11 @@ public class DescriptionServiceImpl implements DescriptionService {
 
         descriptionRepository.deleteDescription(request);
     }
+
+    @Override
+    public Description getDescriptionById(RequestWithId idDto) {
+
+        return descriptionRepository.getDescriptionById(idDto);
+    }
+
 }

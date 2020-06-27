@@ -23,7 +23,6 @@ public class PriceRepositoryImpl implements PriceRepository {
     @PersistenceContext
     EntityManager entityManager;
 
-
     @Override
     @Transactional
     public List<PriceResponse> getPrices() {

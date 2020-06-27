@@ -3,6 +3,7 @@ package com.example.booking.services;
 import com.example.booking.requests.HotelRequest;
 import com.example.booking.requests.RequestWith2Ids;
 import com.example.booking.requests.special_requests.RequestWithId;
+import com.example.booking.responses.AppointmentResponse;
 import com.example.booking.responses.FacilityResponse;
 import com.example.booking.responses.HotelResponse;
 import com.example.booking.responses.RoomResponse;
@@ -28,4 +29,6 @@ public interface HotelService {
     List<RoomResponse> getRoomsOfAHotel(RequestWithId request);
 
     List<HotelResponse> getHotelsOfOwner(RequestWithId requestWithId);
+
+    List<AppointmentResponse> getAppointmentsAtAHotel(Long idUser);
 }

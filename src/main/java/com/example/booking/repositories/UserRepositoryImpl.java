@@ -9,10 +9,7 @@ import com.example.booking.responses.AppointmentResponse;
 import com.example.booking.responses.FacilityResponse;
 import com.example.booking.responses.SearchResponse;
 import com.example.booking.responses.UserResponse;
-import com.example.booking.utils.Language;
-import com.example.booking.utils.RoleEnum;
-import com.example.booking.utils.StateResponse;
-import com.example.booking.utils.Utils;
+import com.example.booking.utils.*;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -102,30 +99,49 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     @Transactional
-    public void makeAdmin(RequestWithId request) {
+    public StateResponse makeAdmin(RequestWithId request) {
 
+        StateResponse stateResponse = new StateResponse();
+        if (request.getId() == null || entityManager.find(User.class, request.getId()) == null) {
+            stateResponse.setSuccess(false);
+            return stateResponse;
+        }
         User user = entityManager.find(User.class, request.getId());
         user.setRoleEnum(RoleEnum.ADMIN);
 
         entityManager.merge(user);
+        stateResponse.setSuccess(true);
+        return stateResponse;
     }
 
     @Override
     @Transactional
-    public void makeOwner(RequestWithId request) {
-
+    public StateResponse makeOwner(RequestWithId request) {
+        StateResponse stateResponse = new StateResponse();
+        if (request.getId() == null || entityManager.find(User.class, request.getId()) == null) {
+            stateResponse.setSuccess(false);
+            return stateResponse;
+        }
         User user = entityManager.find(User.class, request.getId());
         user.setRoleEnum(RoleEnum.OWNER);
 
         entityManager.merge(user);
+        stateResponse.setSuccess(true);
+        return stateResponse;
     }
 
     @Override
     @Transactional
-    public void makePremiumUser(RequestWithId request) {
-
+    public StateResponse makePremiumUser(RequestWithId request) {
+        StateResponse stateResponse = new StateResponse();
+        if (request.getId() == null || entityManager.find(User.class, request.getId()) == null) {
+            stateResponse.setSuccess(false);
+            return stateResponse;
+        }
         User user = entityManager.find(User.class, request.getId());
         user.setRoleEnum(RoleEnum.PREMIUM_USER);
+        stateResponse.setSuccess(true);
+        return stateResponse;
     }
 
     @Override
@@ -139,7 +155,7 @@ public class UserRepositoryImpl implements UserRepository {
 
         UserResponse response = new UserResponse();
         Tuple tuple = (Tuple) query.getResultList().stream().findFirst().orElse(null);
-        if(tuple != null) {
+        if (tuple != null) {
             response.setId((Long) tuple.get(0));
             response.setName(tuple.get(1).toString());
             response.setRoleEnum((RoleEnum) tuple.get(2));
@@ -159,7 +175,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Transactional
-    public String getDescriptionOfARoom(Long idRoom, Language language ) {
+    public String getDescriptionOfARoom(Long idRoom, Language language) {
 
         Query query = entityManager.createQuery(" select descr.description.text from RoomDescription descr where descr.room.id = :id and descr.description.language = :language ", String.class);
         query.setParameter("language", language);
@@ -169,10 +185,20 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Transactional
+    public String getDescriptionOfAHotel(Long idHotel, Language language) {
+
+        Query query = entityManager.createQuery(" select descr.description.text from HotelDescription descr where descr.hotel.id = :id and descr.description.language = :language ", String.class);
+        query.setParameter("language", language);
+        query.setParameter("id", idHotel);
+
+        return (String) query.getResultList().stream().findFirst().orElse(null);
+    }
+
+    @Transactional
     public List<FacilityResponse> getRoomFacilities(Long idRoom) {
 
         Query query = entityManager.createQuery("select room.facilityList from Room  room " +
-                                                    "where room.id = :id ", Collection.class);
+                "where room.id = :id ", Collection.class);
         query.setParameter("id", idRoom);
         List<Facility> resultList = query.getResultList();
         List<FacilityResponse> responseList = new ArrayList<>();
@@ -199,7 +225,7 @@ public class UserRepositoryImpl implements UserRepository {
         List<Facility> facilities = query.getResultList();
         List<FacilityResponse> responseList = new ArrayList<>();
 
-        for( Facility facility : facilities) {
+        for (Facility facility : facilities) {
             FacilityResponse response = new FacilityResponse();
             response.setFacilityType(facility.getFacilityType());
             response.setFacilityName(facility.getFacilityName());
@@ -210,6 +236,7 @@ public class UserRepositoryImpl implements UserRepository {
         }
         return responseList;
     }
+
     @Transactional
     @Override
     public List<SearchResponse> search(SearchRequest request) throws ParseException {
@@ -235,19 +262,111 @@ public class UserRepositoryImpl implements UserRepository {
 
             SearchResponse response = new SearchResponse();
 
-            response.setTotal(getPriceOfRoomForGivenTimeFrame(room.getId(),request.getDateStart(), request.getDateEnd()));
-            response.setRoomDescription(getDescriptionOfARoom(room.getId(),request.getLanguage()));
+            response.setTotal(getPriceOfRoomForGivenTimeFrame(room.getId(), request.getDateStart(), request.getDateEnd()));
+            response.setRoomDescription(getDescriptionOfARoom(room.getId(), request.getLanguage()));
             response.setStartDate(request.getDateStart());
             response.setEndDate(request.getDateEnd());
             response.setIdRoom(room.getId());
+            response.setHotelName(room.getHotel().getName());
+            response.setHotelDescription(getDescriptionOfAHotel(room.getHotel().getId(), request.getLanguage()));
             response.setRoomFacilities(getRoomFacilities(room.getId()));
             response.setHotelFacilities(getHotelFacilities(room.getId()));
-
-            if(response.getTotal() > 10) {
+            response.setRoomAvailability(determineRoomAvailability(room, request.getDateStart(), request.getDateEnd()));
+            if (response.getTotal() > 10) {
                 responseList.add(response);
             }
         }
         return responseList;
+    }
+
+    public RoomAvailability determineRoomAvailability(Room room, String dateStart, String dateEnd) throws ParseException {
+
+        List<Appointment> appointments = entityManager.createQuery("select app from Appointment app " +
+                                                                        "where (( app.startDate between :start and :end) " +
+                                                                        "or ( app.endDate between :start and :end)) " +
+                                                                        "and app.room.id = :idRoom", Appointment.class)
+                        .setParameter("start", Utils.DATE_FORMAT.parse(dateStart))
+                        .setParameter("end", Utils.DATE_FORMAT.parse(dateEnd))
+                        .setParameter("idRoom", room.getId())
+                        .getResultList();
+        if (appointments.size() > 0)
+            return RoomAvailability.BOOKED;
+        return RoomAvailability.AVAILABLE;
+
+
+    }
+
+    @Override
+    @Transactional
+    public List<AppointmentResponse> getUserAppointments(Long idUser) {
+
+        List<Appointment> responseList = entityManager.createQuery("select app from Appointment app " +
+                "where app.user.id = :idUser", Appointment.class)
+                .setParameter("idUser", idUser)
+                .getResultList();
+
+        List<AppointmentResponse> list = new ArrayList<>();
+        for (Appointment appointment : responseList) {
+            AppointmentResponse response = new AppointmentResponse();
+            response.setAmmount(appointment.getAmmount());
+            response.setEndDate(appointment.getEndDate().toString());
+            response.setStartDate(appointment.getStartDate().toString());
+            response.setRoomId(appointment.getRoom().getId());
+            response.setUserId(appointment.getUser().getId());
+            response.setId(appointment.getId());
+            response.setHotelName(appointment.getHotelName());
+            response.setPaid(appointment.isPaid());
+            response.setStatus(appointment.getStatus().name());
+            list.add(response);
+        }
+        return list;
+    }
+
+    @Override
+    @Transactional
+    public StateResponse acceptAppointment(RequestWithId requestWithId) {
+        StateResponse stateResponse = new StateResponse();
+        Appointment appointment = entityManager.find(Appointment.class, requestWithId.getId());
+        if (requestWithId == null || appointment == null) {
+            stateResponse.setSuccess(false);
+            return stateResponse;
+        }
+        appointment.setStatus(StatusAppointment.APPROVED);
+        entityManager.merge(appointment);
+        stateResponse.setSuccess(true);
+        return stateResponse;
+
+    }
+
+    @Override
+    @Transactional
+    public StateResponse refuseAppointment(RequestWithId requestWithId) {
+
+        StateResponse stateResponse = new StateResponse();
+        Appointment appointment = entityManager.find(Appointment.class, requestWithId.getId());
+        if (requestWithId == null || appointment == null) {
+            stateResponse.setSuccess(false);
+            return stateResponse;
+        }
+        appointment.setStatus(StatusAppointment.REFUSED);
+        entityManager.merge(appointment);
+        stateResponse.setSuccess(true);
+        return stateResponse;
+    }
+
+    @Override
+    @Transactional
+    public StateResponse makeBasicUser(RequestWithId requestWithId) {
+        StateResponse stateResponse = new StateResponse();
+        if (requestWithId.getId() == null || entityManager.find(User.class, requestWithId.getId()) == null) {
+            stateResponse.setSuccess(false);
+            return stateResponse;
+        }
+        User user = entityManager.find(User.class, requestWithId.getId());
+        user.setRoleEnum(RoleEnum.BASIC_USER);
+        entityManager.merge(user);
+        stateResponse.setSuccess(true);
+        return stateResponse;
     }
 
     @Transactional
@@ -272,7 +391,7 @@ public class UserRepositoryImpl implements UserRepository {
 
         queryPrice.setParameter("dateStart", dateStartGiven);
         queryPrice.setParameter("dateEnd", dateEndGiven);
-        queryPrice.setParameter("id",id);
+        queryPrice.setParameter("id", id);
 
         List<Price> resultList = queryPrice.getResultList();
 
@@ -285,13 +404,13 @@ public class UserRepositoryImpl implements UserRepository {
                 break;
 
             case 1:
-                price = Utils.getNoDays(dateStartGiven,dateEndGiven)
+                price = Utils.getNoDays(dateStartGiven, dateEndGiven)
                         * resultList.get(0).getAmount();
                 System.out.println("The price for the given time interval is: " + price);
                 break;
 
             case 2:
-                price = (Utils.getNoDays(resultList.get(1).getStartDate(),dateEndGiven)
+                price = (Utils.getNoDays(resultList.get(1).getStartDate(), dateEndGiven)
                         * resultList.get(1).getAmount()) +
                         (Utils.getNoDays(dateStartGiven, dateEndGiven)
                                 * resultList.get(0).getAmount());
@@ -330,12 +449,16 @@ public class UserRepositoryImpl implements UserRepository {
                 .setParameter("roomId", request.getRoomId());
 
         List<Appointment> resultList = appointmentQuery.getResultList();
-        if(resultList.size() == 0) {
+        if (resultList.size() == 0) {
             Appointment app = new Appointment();
-            app.setRoom(entityManager.find(Room.class,request.getRoomId()));
+            app.setRoom(entityManager.find(Room.class, request.getRoomId()));
             app.setStartDate(Utils.DATE_FORMAT.parse(request.getStartDate()));
             app.setEndDate(Utils.DATE_FORMAT.parse(request.getEndDate()));
-            app.setUser(entityManager.find(User.class,request.getUserId()));
+            app.setUser(entityManager.find(User.class, request.getUserId()));
+            app.setStatus(StatusAppointment.IN_REVIEW);
+            Hotel hotel = entityManager.createQuery("select r.hotel from Room r where r.id = :id", Hotel.class).setParameter("id", request.getRoomId()).getResultList().stream().findFirst().orElse(null);
+            if (hotel == null) return null;
+            app.setHotelName(hotel.getName());
             app.setAmmount(getPriceOfRoomForGivenTimeFrame(
                     app.getRoom().getId(), Utils.DATE_FORMAT.format(app.getStartDate()), Utils.DATE_FORMAT.format(app.getEndDate())));
             entityManager.persist(app);
@@ -343,8 +466,11 @@ public class UserRepositoryImpl implements UserRepository {
             response.setStartDate(request.getStartDate());
             response.setEndDate(request.getEndDate());
             response.setRoomId(request.getRoomId());
+            response.setHotelName(entityManager.find(Hotel.class, response.getRoomId()).getName());
             response.setUserId(request.getUserId());
             response.setAmmount(app.getAmmount());
+            response.setPaid(app.isPaid());
+            response.setStatus(app.getStatus().name());
         }
         return response;
     }

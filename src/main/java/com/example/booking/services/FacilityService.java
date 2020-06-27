@@ -11,7 +11,7 @@ import java.util.List;
 public interface FacilityService {
     List<FacilityResponse> getFacilities();
 
-    StateResponse addFacility(FacilityRequest request);
+    Long addFacility(FacilityRequest request);
 
     StateResponse updateFacility(FacilityRequest request);
 

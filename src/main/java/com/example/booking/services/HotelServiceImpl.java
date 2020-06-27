@@ -6,6 +6,7 @@ import com.example.booking.repositories.HotelRepository;
 import com.example.booking.requests.HotelRequest;
 import com.example.booking.requests.RequestWith2Ids;
 import com.example.booking.requests.special_requests.RequestWithId;
+import com.example.booking.responses.AppointmentResponse;
 import com.example.booking.responses.FacilityResponse;
 import com.example.booking.responses.HotelResponse;
 import com.example.booking.responses.RoomResponse;
@@ -96,5 +97,11 @@ public class HotelServiceImpl implements HotelService {
     @Override
     public List<HotelResponse> getHotelsOfOwner(RequestWithId requestWithId) {
         return hotelRepository.getHotelsOfOwner(requestWithId);
+    }
+
+    @Override
+    public List<AppointmentResponse> getAppointmentsAtAHotel(Long idUser) {
+
+        return hotelRepository.getAppointmentsAtAHotel(idUser);
     }
 }
