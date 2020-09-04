@@ -90,3 +90,7 @@ public class Description {
         this.facilityList = facilityList;
     }
 }
+
+class Sex{
+    int age = 18;
+}

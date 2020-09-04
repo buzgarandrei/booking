@@ -466,7 +466,7 @@ public class UserRepositoryImpl implements UserRepository {
             response.setStartDate(request.getStartDate());
             response.setEndDate(request.getEndDate());
             response.setRoomId(request.getRoomId());
-            response.setHotelName(entityManager.find(Hotel.class, response.getRoomId()).getName());
+            response.setHotelName(hotel.getName());
             response.setUserId(request.getUserId());
             response.setAmmount(app.getAmmount());
             response.setPaid(app.isPaid());

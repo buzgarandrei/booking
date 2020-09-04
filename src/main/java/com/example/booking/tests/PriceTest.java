@@ -161,16 +161,16 @@ class PriceTest {
         String dateStart1 = "2020-07-01";
         price1.setStartDate(parseStringToDate(dateStart1));
         String dateEnd1 = "2020-07-12";
-        price1.setEndDate(parseStringToDate(dateEnd));
+        price1.setEndDate(parseStringToDate(dateEnd1));
         price1.setRoom(entityManager.find(Room.class,3L));
         price1.setAmount((float) 10.5);
         entityManager.persist(price1);
 
         Price price2 = new Price();
-        String dateStart2 = "2020-07-12";
+        String dateStart2 = "2020-07-13";
         String endDate2 = "2020-07-26";
         price2.setAmount(11);
-        price2.setRoom(entityManager.find(Room.class,4L));
+        price2.setRoom(entityManager.find(Room.class,3L));
         price2.setStartDate(parseStringToDate(dateStart2));
         price2.setEndDate(parseStringToDate(endDate2));
         entityManager.persist(price2);
@@ -197,7 +197,7 @@ class PriceTest {
         entityManager.persist(price1);
 
         Price price2 = new Price();
-        String dateStart2 = "2020-07-12";
+        String dateStart2 = "2020-07-13";
         String endDate2 = "2020-07-26";
         price2.setAmount(12);
         price2.setRoom(entityManager.find(Room.class,4L));
@@ -227,7 +227,7 @@ class PriceTest {
         entityManager.persist(price1);
 
         Price price2 = new Price();
-        String dateStart2 = "2020-07-12";
+        String dateStart2 = "2020-07-13";
         String endDate2 = "2020-07-26";
         price2.setAmount(15);
         price2.setRoom(entityManager.find(Room.class,5L));
